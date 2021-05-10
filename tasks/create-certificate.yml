@@ -56,7 +56,7 @@
   with_items:
     - '/etc/pki/ca-trust/source/anchors/{{ crt_name }}'
     - '/etc/pki/tls/private/{{ key_name }}'
-    
+
 # Make sure to trust the self signed cert we just made
 - name: Copy self signed cert to registry's PKI trust
   become: true

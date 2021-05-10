@@ -16,7 +16,7 @@
     path: /etc/cni/net.d/87-podman-bridge.conflist
     regexp: 'dns.podman'
     state: absent
-  check_mode: yes
+  check_mode: true
   changed_when: false
   register: dns_config
 

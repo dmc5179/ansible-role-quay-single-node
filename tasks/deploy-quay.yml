@@ -10,16 +10,16 @@
     name: quay
     image: registry.redhat.io/quay/quay-rhel8:v3.5.1
     state: started
-    restart: yes
+    restart: true
     restart_policy: "always"
     sysctl:
       net.core.somaxconn: 4096
     ports:
-        - "8080:8080"
-        - "443:8443"
+      - "8080:8080"
+      - "443:8443"
     volume:
-        - "{{ QUAY_ROOT_DIR }}/config:/conf/stack:Z"
-        - "{{ QUAY_ROOT_DIR }}/storage:/datastorage:Z"
+      - "{{ QUAY_ROOT_DIR }}/config:/conf/stack:Z"
+      - "{{ QUAY_ROOT_DIR }}/storage:/datastorage:Z"
   tags:
     - quay
 
@@ -49,4 +49,4 @@
 
 - name: Force systemd to reread configs
   ansible.builtin.systemd:
-    daemon_reload: yes
+    daemon_reload: true

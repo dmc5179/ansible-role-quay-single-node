@@ -279,23 +279,23 @@ docker_images:
   - src_registry: registry.redhat.io
     trgt_registry: "{{ QUAY_ENDPOINT }}"
     image: openshift3/jenkins-agent-maven-35-rhel7
-    tags: ['latest','*']
+    tags: ['latest', '*']
   - src_registry: registry.redhat.io
     trgt_registry: "{{ QUAY_ENDPOINT }}"
     image: openshift3/jenkins-agent-nodejs-8-rhel7
-    tags: ['latest','*']
+    tags: ['latest', '*']
   - src_registry: registry.redhat.io
     trgt_registry: "{{ QUAY_ENDPOINT }}"
     image: openshift3/jenkins-slave-base-rhel7
-    tags: ['latest','*']
+    tags: ['latest', '*']
   - src_registry: registry.redhat.io
     trgt_registry: "{{ QUAY_ENDPOINT }}"
     image: openshift3/jenkins-slave-maven-rhel7
-    tags: ['latest','*']
+    tags: ['latest', '*']
   - src_registry: registry.redhat.io
     trgt_registry: "{{ QUAY_ENDPOINT }}"
     image: openshift3/jenkins-slave-nodejs-rhel7
-    tags: ['latest','*']
+    tags: ['latest', '*']
   - src_registry: registry.redhat.io
     trgt_registry: "{{ QUAY_ENDPOINT }}"
     image: openshift3/jenkins-slave-base-rhel7

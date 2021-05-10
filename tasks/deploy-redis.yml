@@ -5,12 +5,12 @@
     name: redis
     image: registry.redhat.io/rhel8/redis-5:1
     state: started
-    restart: yes
+    restart: true
     restart_policy: "always"
     ports:
-        - "6379:6379"
+      - "6379:6379"
     env:
-        REDIS_PASSWORD: "{{ redis_password }}"
+      REDIS_PASSWORD: "{{ redis_password }}"
 
 - name: Create redis systemd service file
   command: >
@@ -31,4 +31,4 @@
 
 - name: Force systemd to reread configs
   ansible.builtin.systemd:
-    daemon_reload: yes
+    daemon_reload: true

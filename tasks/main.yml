@@ -35,8 +35,8 @@
   include_tasks: tasks/deploy-redis.yml
 
 # This isn't really necessary if we already have the config.yaml
-#- name: Start quay in config mode
-#  include_tasks: tasks/quay-config-mode.yml
+# - name: Start quay in config mode
+#   include_tasks: tasks/quay-config-mode.yml
 
 - name: Deploy Certificates
   include_tasks: tasks/create-certificate.yml

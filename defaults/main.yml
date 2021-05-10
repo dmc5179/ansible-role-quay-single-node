@@ -56,7 +56,7 @@ CLAIR_ENCRYPT: true
 
 # This isn't currently used but may be used in the future
 # @var quay_organization_ca_cert: '/etc/ipa/ca.crt' # ONLY USED FOR AUTOMATED TESTING Path to your organizations CA chain
-#quay_organization_ca_cert: '/etc/ipa/ca.crt'
+# quay_organization_ca_cert: '/etc/ipa/ca.crt'
 
 # @var QUAY_CLAIR_HTTP_NO_PROXY: 'undefined' # list of systems not to proxy (standard NO_PROXY syntax)
 # QUAY_CLAIR_HTTP_NO_PROXY: "{{ QUAY_ENDPOINT }}"
