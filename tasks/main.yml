@@ -1,0 +1,58 @@
+---
+# tasks file for quay-ansible
+
+- name: "Create quay config directory"
+  file:
+    state: directory
+    path: "{{ QUAY_ROOT_DIR }}/config"
+  tags:
+    - quay
+
+- name: "Create extra_ca_certs directory"
+  file:
+    state: directory
+    path: "{{ QUAY_ROOT_DIR }}/config/extra_ca_certs"
+  tags:
+    - quay
+
+- name: "Create quay storage directory (when object storage is not available)"
+  file:
+    state: directory
+    path: "{{ QUAY_ROOT_DIR }}/storage"
+  tags:
+    - quay
+
+- name: Configure podman
+  include_tasks: tasks/podman-setup.yml
+
+- name: Configure firewall
+  include_tasks: tasks/firewall-setup.yml
+
+- name: Deploy postgres
+  include_tasks: tasks/deploy-postgresql.yml
+
+- name: Deploy redis
+  include_tasks: tasks/deploy-redis.yml
+
+# This isn't really necessary if we already have the config.yaml
+#- name: Start quay in config mode
+#  include_tasks: tasks/quay-config-mode.yml
+
+- name: Deploy Certificates
+  include_tasks: tasks/create-certificate.yml
+
+- name: Start quay
+  include_tasks: tasks/deploy-quay.yml
+
+###########################################################################
+# TODO: Implement these at a later time
+#
+#  - name: Deploy quay mirror sync container
+#    include_tasks: tasks/quay-mirror.yml
+#    tags:
+#      - quay-worker
+#
+#  - name: Deploy clair
+#    include_tasks: tasks/quay-clair.yml
+#    tags:
+#      - quay-clair

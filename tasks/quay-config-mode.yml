@@ -1,0 +1,12 @@
+---
+
+- name: Start quay in config mode
+  containers.podman.podman_container:
+    name: quay_config
+    image: registry.redhat.io/quay/quay-rhel8:v3.5.1
+    state: started
+    restart: false
+    restart_policy: "no"
+    ports:
+        - "8080:8080"
+    command: 'config secret'

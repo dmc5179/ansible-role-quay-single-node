@@ -1,0 +1,42 @@
+---
+
+  - name: Create env file on target
+    template:
+      src: templates/mysql-env-file
+      dest: ~/mysql-env-file
+    tags:
+      - quay
+      - quay-config
+      - quay-worker
+      - redis
+      - database
+
+  - name: Create /var/lib/mysql
+    file:
+      path: /var/lib/mysql
+      state: directory
+      mode: '0777'
+    tags:
+      - quay
+      - quay-config
+      - quay-worker
+      - redis
+      - database
+
+  - name: Deploy mysql container
+    docker_container:
+      env_file: "~/mysql-env-file"
+       detach: true
+       restart: true
+      name: "{{ MYSQL_CONTAINER_NAME }}"
+       privileged: true
+      published_ports: 3306:3306
+      volumes: /var/lib/mysql:/var/lib/mysql/data:Z
+      image: "registry.access.redhat.com/rhscl/mysql-57-rhel7"
+    tags:
+      - quay
+      - quay-config
+      - quay-worker
+      - redis
+      - database
+
