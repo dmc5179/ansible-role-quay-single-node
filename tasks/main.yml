@@ -44,6 +44,9 @@
 - name: Start quay
   include_tasks: tasks/deploy-quay.yml
 
+- name: Start clairv4
+  include_tasks: tasks/quay-clair.yml
+
 ###########################################################################
 # TODO: Implement these at a later time
 #
