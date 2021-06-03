@@ -6,10 +6,10 @@
     - role: redhatofficial.rhel8_stig
       vars:
         high_severity: true
-        medium_severity: false
+        medium_severity: true
         low_severity: false
         unknown_severity: false
-        enable_fips_mode: {{fips_enabled}}
+        enable_fips_mode: true
 
   tasks:
 
