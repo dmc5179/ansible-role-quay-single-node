@@ -53,7 +53,7 @@
 
 - name: Start clair container
   containers.podman.podman_container:
-    name: clairv4
+    name: clair
     image: registry.redhat.io/quay/clair-rhel8:v3.5.1
     state: started
     restart: true
@@ -105,3 +105,7 @@
 #  when: QUAY_CLAIR_HTTP_PROXY is defined or QUAY_CLAIR_HTTPS_PROXY is defined
 #  tags:
 #    - postgres
+
+- name: Wait for clair to start
+  ansible.builtin.pause:
+    seconds: 6
