@@ -13,11 +13,20 @@ DB_URI: postgresql://{{ postgresql_user }}:{{ postgresql_password }}@{{ postgres
 DEFAULT_TAG_EXPIRATION: 2w
 DISTRIBUTED_STORAGE_CONFIG:
     default:
-        - LocalStorage
-        - storage_path: /datastorage/registry
+      - S3Storage
+      - storage_path: /datastorage/registry
+        s3_bucket: quaydan
+        host: 's3.us-east-1.amazonaws.com'
 DISTRIBUTED_STORAGE_DEFAULT_LOCATIONS: []
 DISTRIBUTED_STORAGE_PREFERENCE:
     - default
+#DISTRIBUTED_STORAGE_CONFIG:
+#    default:
+#        - LocalStorage
+#        - storage_path: /datastorage/registry
+#DISTRIBUTED_STORAGE_DEFAULT_LOCATIONS: []
+#DISTRIBUTED_STORAGE_PREFERENCE:
+#    - default
 FEATURE_ACI_CONVERSION: false
 FEATURE_ACTION_LOG_ROTATION: false
 FEATURE_ANONYMOUS_ACCESS: true
@@ -41,7 +50,7 @@ FEATURE_REPO_MIRROR: false
 FEATURE_REQUIRE_TEAM_INVITE: true
 FEATURE_RESTRICTED_V1_PUSH: true
 FEATURE_SECURITY_NOTIFICATIONS: false
-FEATURE_SECURITY_SCANNER: false
+FEATURE_SECURITY_SCANNER: true
 FEATURE_SIGNING: false
 FEATURE_STORAGE_REPLICATION: false
 FEATURE_TEAM_SYNCING: false
@@ -76,7 +85,9 @@ REPO_MIRROR_TLS_VERIFY: true
 SEARCH_MAX_RESULT_PAGE_COUNT: 10
 SEARCH_RESULTS_PER_PAGE: 10
 SECRET_KEY: a1dc8652-66c0-496a-a908-27ffe25af642
-SECURITY_SCANNER_INDEXING_INTERVAL: 30
+SECURITY_SCANNER_INDEXING_INTERVAL: 5
+SECURITY_SCANNER_V4_ENDPOINT: http://clair.dns.podman:8080
+SECURITY_SCANNER_V4_PSK: ZjA3MWpmYzRjZ2hiZA==
 SERVER_HOSTNAME: {{ quay_hostname }}
 SETUP_COMPLETE: true
 TAG_EXPIRATION_OPTIONS:
