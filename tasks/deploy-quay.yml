@@ -15,7 +15,7 @@
     sysctl:
       net.core.somaxconn: 4096
     ports:
-      - "8080:8080"
+#      - "8080:8080"
       - "443:8443"
     volume:
       - "{{ QUAY_ROOT_DIR }}/config:/conf/stack:Z"
