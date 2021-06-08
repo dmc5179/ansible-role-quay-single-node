@@ -3,7 +3,7 @@
 
 fips_enabled: true
 
-quay_hostname: 'quay.dan.redhatgov.io'
+quay_hostname: 'quay.danclark.io'
 quay_san: ''
 redis_hostname: 'redis.dns.podman'
 redis_password: 'strongpassword'
