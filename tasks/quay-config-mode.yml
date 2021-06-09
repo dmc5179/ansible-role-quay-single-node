@@ -8,5 +8,5 @@
     restart: false
     restart_policy: "no"
     ports:
-      - "8080:8080"
-    command: 'config secret'
+      - "{{ quay_config_port }}:8080"
+    command: "config {{ quay_config_password }}"
