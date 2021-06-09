@@ -3,7 +3,7 @@
 - name: Copy quay template in place
   template:
     src: config.yaml.j2
-    dest: '{{ QUAY_ROOT_DIR }}/config/config.yaml'
+    dest: '{{ quay_root_dir }}/config/config.yaml'
 
 - name: Start quay
   containers.podman.podman_container:
@@ -16,10 +16,10 @@
       net.core.somaxconn: 4096
     ports:
 #      - "8080:8080"
-      - "443:8443"
+      - "{{ quay_https_port }}:8443"
     volume:
-      - "{{ QUAY_ROOT_DIR }}/config:/conf/stack:Z"
-      - "{{ QUAY_ROOT_DIR }}/storage:/datastorage:Z"
+      - "{{ quay_root_dir }}/config:/conf/stack:Z"
+      - "{{ quay_root_dir }}/storage:/datastorage:Z"
   tags:
     - quay
 

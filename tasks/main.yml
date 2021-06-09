@@ -4,21 +4,21 @@
 - name: "Create quay config directory"
   file:
     state: directory
-    path: "{{ QUAY_ROOT_DIR }}/config"
+    path: "{{ quay_root_dir }}/config"
   tags:
     - quay
 
 - name: "Create extra_ca_certs directory"
   file:
     state: directory
-    path: "{{ QUAY_ROOT_DIR }}/config/extra_ca_certs"
+    path: "{{ quay_root_dir }}/config/extra_ca_certs"
   tags:
     - quay
 
 - name: "Create quay storage directory (when object storage is not available)"
   file:
     state: directory
-    path: "{{ QUAY_ROOT_DIR }}/storage"
+    path: "{{ quay_root_dir }}/storage"
   tags:
     - quay
 
@@ -34,18 +34,21 @@
 - name: Deploy redis
   include_tasks: tasks/deploy-redis.yml
 
-# This isn't really necessary if we already have the config.yaml
-#- name: Start quay in config mode
-#  include_tasks: tasks/quay-config-mode.yml
+- name: Start quay in config mode
+  include_tasks: tasks/quay-config-mode.yml
+  when: ( quay_config_mode )
 
 - name: Deploy Certificates
   include_tasks: tasks/create-certificate.yml
+  when: ( not quay_config_mode )
 
 - name: Start clairv4
   include_tasks: tasks/quay-clair.yml
+  when: ( not quay_config_mode )
 
 - name: Start quay
   include_tasks: tasks/deploy-quay.yml
+  when: ( not quay_config_mode )
 
 ###########################################################################
 # TODO: Implement these at a later time

@@ -1,7 +1,7 @@
 ---
 - name: Generate an OpenSSL private key
   community.crypto.openssl_privatekey:
-    path: "{{ QUAY_ROOT_DIR }}/config/{{ key_name }}"
+    path: "{{ quay_root_dir }}/config/{{ key_name }}"
     size: '{{ key_size }}'
     type: '{{ key_type }}'
     mode: 0640
@@ -20,13 +20,13 @@
 
 - name: Generate an OpenSSL CSR
   community.crypto.openssl_csr:
-    path: "{{ QUAY_ROOT_DIR }}/config/{{ csr_name }}"
+    path: "{{ quay_root_dir }}/config/{{ csr_name }}"
     country_name: 'US'
     state_or_province_name: 'Virginia'
     locality_name: 'Chantilly'
     organization_name: 'RedHat'
     organizational_unit_name: 'RedHat'
-    privatekey_path: "{{ QUAY_ROOT_DIR }}/config/{{ key_name }}"
+    privatekey_path: "{{ quay_root_dir }}/config/{{ key_name }}"
     common_name: "{{ quay_hostname }}"
     subject_alt_name: '{{ quay_san }}'
     subject_alt_name_critical: true
@@ -40,9 +40,9 @@
 
 - name: Generate a Self Signed OpenSSL Certificate
   community.crypto.x509_certificate:
-    path: "{{ QUAY_ROOT_DIR }}/config/{{ crt_name }}"
-    privatekey_path: "{{ QUAY_ROOT_DIR }}/config/{{ key_name }}"
-    csr_path: "{{ QUAY_ROOT_DIR }}/config/{{ csr_name }}"
+    path: "{{ quay_root_dir }}/config/{{ crt_name }}"
+    privatekey_path: "{{ quay_root_dir }}/config/{{ key_name }}"
+    csr_path: "{{ quay_root_dir }}/config/{{ csr_name }}"
     provider: selfsigned
     selfsigned_version: 3
     mode: 0644
@@ -61,7 +61,7 @@
 - name: Copy self signed cert to registry's PKI trust
   become: true
   copy:
-    src: "{{ QUAY_ROOT_DIR }}/config/{{ crt_name }}"
+    src: "{{ quay_root_dir }}/config/{{ crt_name }}"
     dest: '/etc/pki/ca-trust/source/anchors/'
     remote_src: true
   tags:
@@ -70,7 +70,7 @@
 - name: Copy private key to registry's host tls directory
   become: true
   copy:
-    src: "{{ QUAY_ROOT_DIR }}/config/{{ key_name }}"
+    src: "{{ quay_root_dir }}/config/{{ key_name }}"
     dest: '/etc/pki/tls/private/{{ key_name }}'
     owner: root
     group: root

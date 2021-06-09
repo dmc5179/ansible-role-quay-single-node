@@ -3,4 +3,4 @@
   become: true
   gather_facts: true
   roles:
-    - ../quay-ansible
+    - ../ansible-role-quay-single-node
