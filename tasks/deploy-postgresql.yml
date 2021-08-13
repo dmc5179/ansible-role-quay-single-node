@@ -27,6 +27,31 @@
       POSTGRESQL_ADMIN_PASSWORD: "adminpass"
     volume:
       - "{{ quay_root_dir }}/postgres-quay:/var/lib/pgsql/data:Z"
+  when: ( podman )
+
+- name: Start postgres container (docker)
+  community.docker.docker_container:
+    name: postgresql-quay
+    hostname: postgresql-quay
+    network_mode: quay_net
+#    network_mode: host
+    image: registry.redhat.io/rhel8/postgresql-10:1
+    state: started
+    restart: yes
+    networks:
+      - name: host
+        aliases:
+          - postgresql-quay
+    ports:
+     - "5432:5432"
+    env:
+      POSTGRESQL_USER: "quayuser"
+      POSTGRESQL_PASSWORD: "quaypass"
+      POSTGRESQL_DATABASE: "quay"
+      POSTGRESQL_ADMIN_PASSWORD: "adminpass"
+    volumes:
+      - "{{ quay_root_dir }}/postgres-quay:/var/lib/pgsql/data:Z"
+  when: (not podman)
 
 - name: Wait for postgres to start
   ansible.builtin.pause:
@@ -34,23 +59,32 @@
 
 - name: Enable pg_trgm
   command: >
-    podman exec -it postgresql-quay /bin/bash -c 'echo "CREATE EXTENSION IF NOT EXISTS pg_trgm" | psql -d quay -U postgres'
+    {{ runtime }} exec -it postgresql-quay /bin/bash -c 'echo "CREATE EXTENSION IF NOT EXISTS pg_trgm" | psql -d quay -U postgres'
+#  when: ( podman )
+
+#- name: Enable pg_trgm (docker)
+#  command: >
+#    docker exec -it postgresql-quay /bin/bash -c 'echo "CREATE EXTENSION IF NOT EXISTS pg_trgm" | psql -d quay -U postgres'
+#  when: ( not podman )
 
 - name: Create postgresql-quay systemd service file
   command: podman generate systemd -n -f postgresql-quay
   args:
     chdir: '/tmp/'
+  when: ( podman )
 
 - name: Write postgresql-quay systemd unit file
   copy:
     src: '/tmp/container-postgresql-quay.service'
     dest: '/usr/lib/systemd/system/container-postgresql-quay.service'
     remote_src: true
+  when: ( podman )
 
 - name: Remove temp unit file
   file:
     path: '/tmp/container-postgresql-quay.service'
     state: absent
+  when: ( podman )
 
 - name: Start postgresql-quay after redis container service
   community.general.ini_file:
@@ -58,7 +92,10 @@
     section: Unit
     option: After
     value: 'network-online.target,container-redis.service'
+  when: ( podman )
 
 - name: Force systemd to reread configs
   ansible.builtin.systemd:
     daemon_reload: true
+  when: ( podman )
+

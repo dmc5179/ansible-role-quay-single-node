@@ -1,0 +1,28 @@
+
+- name: Install docker repository
+  yum_repository:
+    name: docker-ce
+    description: Docker CE Repo
+    baseurl: https://download.docker.com/linux/centos/$releasever/$basearch/stable
+    gpgcheck: true
+    gpgkey: https://download.docker.com/linux/centos/gpg
+
+- name: Install docker-ce
+  package:
+    name: docker-ce
+    state: latest
+
+- name: Start and enable docker daemon
+  ansible.builtin.systemd:
+    name: docker
+    state: started
+    enabled: true
+
+- name: Install docker python dependencies
+  pip:
+    name: docker
+    state: present
+
+- name: Create network for quay
+  community.docker.docker_network:
+    name: quay_net

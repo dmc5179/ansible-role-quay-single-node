@@ -11,24 +11,48 @@
       - "6379:6379"
     env:
       REDIS_PASSWORD: "{{ redis_password }}"
+  when: ( podman )
+
+- name: Start redis container (docker)
+  community.docker.docker_container:
+    name: redis
+    hostname: redis
+#    network_mode: host
+    network_mode: quay_net
+    networks:
+      - name: host
+        aliases:
+          - redis
+    image: registry.redhat.io/rhel8/redis-5:1
+    state: started
+    restart: yes
+    ports:
+     - "6379:6379"
+    env:
+      REDIS_PASSWORD: "{{ redis_password }}"
+  when: (not podman)
 
 - name: Create redis systemd service file
   command: >
     podman generate systemd -n -f redis
   args:
     chdir: '/tmp/'
+  when: ( podman )
 
 - name: Write reids systemd unit file
   copy:
     src: '/tmp/container-redis.service'
     dest: '/usr/lib/systemd/system/container-redis.service'
     remote_src: true
+  when: ( podman )
 
 - name: Remove temp unit file
   file:
     path: '/tmp/container-redis.service'
     state: absent
+  when: ( podman )
 
 - name: Force systemd to reread configs
   ansible.builtin.systemd:
     daemon_reload: true
+  when: ( podman )

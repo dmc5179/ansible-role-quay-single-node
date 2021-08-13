@@ -10,3 +10,20 @@
     ports:
       - "{{ quay_config_port }}:8080"
     command: "config {{ quay_config_password }}"
+  when: ( podman )
+
+- name: Start quay in config mode(docker)
+  community.docker.docker_container:
+    name: quay_config
+    image: registry.redhat.io/quay/quay-rhel8:v3.5.1
+    state: started
+    restart: false
+    network_mode: quay_net
+    networks:
+      - name: quay_net
+        aliases:
+          - quay
+    ports:
+      - "{{ quay_config_port }}:8080"
+    command: "config {{ quay_config_password }}"
+  when: (not podman)

@@ -39,15 +39,15 @@
 
 - name: Create clair database
   command: >
-    podman exec -it postgresql-quay /bin/bash -c 'echo "CREATE DATABASE clair" | psql -U postgres'
+    {{ runtime }} exec -it postgresql-quay /bin/bash -c 'echo "CREATE DATABASE clair" | psql -U postgres'
 
 - name: Grant privileges on clair database to quay user
   command: >
-    podman exec -it postgresql-quay /bin/bash -c 'echo "GRANT ALL PRIVILEGES ON DATABASE clair TO quayuser" | psql -U postgres'
+    {{ runtime }} exec -it postgresql-quay /bin/bash -c 'echo "GRANT ALL PRIVILEGES ON DATABASE clair TO quayuser" | psql -U postgres'
 
 - name: Enable uuid-ossp
   command: >
-    podman exec -it postgresql-quay /bin/bash -c 'echo "CREATE EXTENSION IF NOT EXISTS \"uuid-ossp\"" | psql -d clair -U postgres'
+    {{ runtime }} exec -it postgresql-quay /bin/bash -c 'echo "CREATE EXTENSION IF NOT EXISTS \"uuid-ossp\"" | psql -d clair -U postgres'
 
 - name: Start clair container
   containers.podman.podman_container:
@@ -66,6 +66,31 @@
       - "8089:8089"
     volume:
       - "/etc/clairv4/config:/clair"
+  when: ( podman )
+
+- name: Start clair (docker)
+  community.docker.docker_container:
+    name: clair
+    image: registry.redhat.io/quay/clair-rhel8:v3.5.1
+    state: started
+    restart: yes
+#    network_mode: host
+    network_mode: quay_net
+    networks:
+      - name: host
+        aliases:
+          - clair
+    ports:
+      - "8080:8080"
+      - "8089:8089"
+#    sysctls:
+#      net.core.somaxconn: 4096
+    volumes:
+      - "/etc/clairv4/config:/clair"
+    env:
+      CLAIR_CONF: '/clair/config.yaml'
+      CLAIR_MODE: 'combo'
+  when: (not podman)
 
 - name: Wait for clair to start
   ansible.builtin.pause:

@@ -22,14 +22,25 @@
   tags:
     - quay
 
+- name: Set runtime engine
+  set_fact:
+    runtime: "docker"
+  when: (not podman)
+
 - name: Configure podman
   include_tasks: tasks/podman-setup.yml
+  when: ( podman )
+
+- name: Configure docker
+  include_tasks: tasks/docker-setup.yml
+  when: (not podman)
 
 - name: Configure firewall
   include_tasks: tasks/firewall-setup.yml
 
 - name: Deploy postgres
   include_tasks: tasks/deploy-postgresql.yml
+  when: ( not rds )
 
 - name: Deploy redis
   include_tasks: tasks/deploy-redis.yml
@@ -49,16 +60,3 @@
 - name: Start quay
   include_tasks: tasks/deploy-quay.yml
   when: ( not quay_config_mode )
-
-###########################################################################
-# TODO: Implement these at a later time
-#
-#  - name: Deploy quay mirror sync container
-#    include_tasks: tasks/quay-mirror.yml
-#    tags:
-#      - quay-worker
-#
-#  - name: Deploy clair
-#    include_tasks: tasks/quay-clair.yml
-#    tags:
-#      - quay-clair
