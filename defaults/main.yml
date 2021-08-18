@@ -5,10 +5,11 @@ fips_enabled: true
 
 quay_config_mode: false
 
-quay_hostname: 'quay.danclark.io'
+quay_hostname: 'quay.dan.redhatgov.io'
 quay_san: ''
 quay_image: ''
 redis_hostname: 'redis.dns.podman'
+#redis_hostname: 'redis'
 redis_password: 'strongpassword'
 redis_port: 6379
 redis_image:
@@ -16,9 +17,15 @@ redis_image:
 postgresql_user: 'quayuser'
 postgresql_password: 'quaypass'
 postgresql_hostname: 'postgresql-quay.dns.podman'
+#postgresql_hostname: 'postgresql-quay'
 postgresql_db: 'quay'
 postgresql_port: 5432
 postgresql_image:
+rds: false
+podman: true
+runtime: "podman"
+#R3dHat2021
+#postgres
 
 clair_image: ''
 
@@ -48,7 +55,8 @@ quay_https_port: 443
 
 ### Clair ###
 # @var CLAIR_ENDPOINT: '{{ QUAY_ENDPOINT }}' # The FQDN for your clair server, defaults to same as quay
-clair_endpoint: "clair.dns.podman"
+#clair_endpoint: "clair.dns.podman"
+clair_endpoint: 'clair'
 
 # @var CLAIR_ENCRYPT: true # Boolean on if Clair should run on TLS
 clair_encrypt: true
@@ -59,3 +67,10 @@ quay_redis_deploy: true
 
 # @var QUAY_ROOT_DIR: '/opt/quay' # The directory where quay and clair configurations will be placed
 quay_root_dir: /opt/quay
+
+
+#################
+# Quay Features
+#################
+
+feature_repo_mirror: true

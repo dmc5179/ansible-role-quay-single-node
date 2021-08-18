@@ -1,6 +1,7 @@
 ---
 
 - name: Ensure firewalld is installed
+  become: true
   package:
     name: firewalld
     state: latest
@@ -12,6 +13,7 @@
     - database
 
 - name: Ensure firewalld is started
+  become: true
   systemd:
     name: firewalld
     state: started
@@ -23,7 +25,8 @@
     - redis
     - database
 
-- name: Enable firewalld ports
+- name: Enable quay firewalld ports
+  become: true
   ansible.posix.firewalld:
     port: "{{ item }}"
     zone: "public"
@@ -31,6 +34,23 @@
     state: enabled
   with_items:
     - '443/tcp'
+  tags:
+    - quay
+    - quay-config
+    - quay-worker
+    - redis
+    - database
+
+- name: Enable quay config firewalld ports
+  become: true
+  ansible.posix.firewalld:
+    port: "{{ item }}"
+    zone: "public"
+    permanent: true
+    state: enabled
+  with_items:
+    - '{{ quay_config_port }}/tcp'
+  when: ( quay_config_mode | bool )
   tags:
     - quay
     - quay-config

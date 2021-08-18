@@ -1,10 +1,22 @@
 ---
 # tasks file for quay-ansible
 
+- name: Target User ID
+  command: 'id -u'
+  register: registry_user
+
+- name: Target Group ID
+  command: 'id -g'
+  register: registry_group
+
 - name: "Create quay config directory"
+  become: true
   file:
     state: directory
     path: "{{ quay_root_dir }}/config"
+    owner: '{{ registry_user.stdout | int }}'
+    group: '{{ registry_group.stdout | int }}'
+    mode: 0755
   tags:
     - quay
 

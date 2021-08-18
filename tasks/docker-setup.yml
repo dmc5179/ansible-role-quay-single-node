@@ -1,5 +1,6 @@
 
 - name: Install docker repository
+  become: true
   yum_repository:
     name: docker-ce
     description: Docker CE Repo
@@ -8,11 +9,13 @@
     gpgkey: https://download.docker.com/linux/centos/gpg
 
 - name: Install docker-ce
+  become: true
   package:
     name: docker-ce
     state: latest
 
 - name: Start and enable docker daemon
+  become: true
   ansible.builtin.systemd:
     name: docker
     state: started
@@ -24,5 +27,6 @@
     state: present
 
 - name: Create network for quay
+  become: true
   community.docker.docker_network:
     name: quay_net

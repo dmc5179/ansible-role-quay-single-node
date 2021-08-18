@@ -1,6 +1,7 @@
 ---
 
 - name: Install podman and dependencies
+  become: true
   ansible.builtin.package:
     name:
       - podman
@@ -12,6 +13,7 @@
     state: latest
 
 - name: Check if default podman network is configured
+  become: true
   lineinfile:
     path: /etc/cni/net.d/87-podman-bridge.conflist
     regexp: 'dns.podman'
@@ -23,16 +25,19 @@
 - name: Configure podman with CNI DNS plugin
   block:
     - name: Clone podman CNI DNS plugin
+      become: true
       ansible.builtin.git:
         repo: 'https://github.com/containers/dnsname.git'
         dest: '/tmp/dnsname'
 
     - name: Build DNS plugin
+      become: true
       community.general.make:
         chdir: '/tmp/dnsname'
         target: all
 
     - name: Install DNS plugin
+      become: true
       community.general.make:
         chdir: '/tmp/dnsname'
         target: install
@@ -40,16 +45,19 @@
           PREFIX: '/usr'
 
     - name: Remove DNS plugin cloned repo
+      become: true
       file:
         path: '/tmp/dnsname'
         state: absent
 
     - name: Add dns plugin to default network
+      become: true
       command: >
          jq '.plugins += [{"type":"dnsname","domainName":"dns.podman","capabilities":{"aliases":true}}]' /etc/cni/net.d/87-podman-bridge.conflist
       register: cni_json
 
     - name: Replace default network conflist
+      become: true
       copy:
         content: "{{ cni_json.stdout }}"
         dest: /etc/cni/net.d/87-podman-bridge.conflist

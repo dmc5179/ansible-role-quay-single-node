@@ -74,6 +74,7 @@
   when: ( podman )
 
 - name: Write postgresql-quay systemd unit file
+  become: true
   copy:
     src: '/tmp/container-postgresql-quay.service'
     dest: '/usr/lib/systemd/system/container-postgresql-quay.service'
@@ -87,6 +88,7 @@
   when: ( podman )
 
 - name: Start postgresql-quay after redis container service
+  become: true
   community.general.ini_file:
     path: /usr/lib/systemd/system/container-postgresql-quay.service
     section: Unit
@@ -95,6 +97,7 @@
   when: ( podman )
 
 - name: Force systemd to reread configs
+  become: true
   ansible.builtin.systemd:
     daemon_reload: true
   when: ( podman )
